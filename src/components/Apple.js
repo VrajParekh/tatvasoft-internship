@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 const Apple = () => {
   const Navigate = useNavigate();
@@ -9,7 +10,9 @@ const Apple = () => {
   return (
     <div>
       <div>Apple Page</div>
-      <button onClick={onHomePageButtonClick}>Navigate to Home Page</button>
+      <Button onClick={onHomePageButtonClick} variant="contained">
+        Navigate to Home Page
+      </Button>
     </div>
   );
 };

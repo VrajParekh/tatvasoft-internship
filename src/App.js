@@ -1,23 +1,14 @@
 import "./App.css";
 import HomePage from "./components/HomePage";
 import Apple from "./components/Apple";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NotFound from "./components/NotFound";
 
 function App() {
   return (
     <Router>
-      <div>
-        <Link to="/" style={{ marginLeft: 5 }}>
-          Home
-        </Link>
-        <Link to="/apple" style={{ marginLeft: 10 }}>
-          Apple
-        </Link>
-        <Link to="/applet" style={{ marginLeft: 10 }}>
-          Applet
-        </Link>
-      </div>
+      <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/apple" element={<Apple />} />

@@ -1,9 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { globalStyles } from "../constants";
 
 const Navbar = () => {
   return (
-    <div>
+    <div style={{ ...globalStyles.navbar }}>
       <Link to="/" style={{ marginLeft: 5 }}>
         Home
       </Link>

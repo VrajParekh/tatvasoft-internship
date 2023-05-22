@@ -7,14 +7,20 @@ import NotFound from "./components/NotFound";
 
 function App() {
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/apple" element={<Apple />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
+    <>
+      <img
+        src={`${process.env.REACT_APP_HOSTED_URL}logo192.png`}
+        alt="App logo"
+      />
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/apple" element={<Apple />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Router>
+    </>
   );
 }
 

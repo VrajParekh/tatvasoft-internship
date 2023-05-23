@@ -3,5 +3,6 @@ export const globalStyles = {
     display: "flex",
     padding: 5,
     columnGap: 10,
+    alignItems: "center",
   },
 };

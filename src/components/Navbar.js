@@ -5,6 +5,11 @@ import { globalStyles } from "../constants";
 const Navbar = () => {
   return (
     <div style={{ ...globalStyles.navbar }}>
+      <img
+        src={`${process.env.REACT_APP_HOSTED_URL}logo192.png`}
+        alt="App logo"
+        height={30}
+      />
       <Link to="/" style={{ marginLeft: 5 }}>
         Home
       </Link>

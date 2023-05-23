@@ -1,0 +1,28 @@
+@import url("https://fonts.googleapis.com/css2?family=Abel&family=Bebas+Neue&family=M+PLUS+1:wght@400;500&family=Roboto:wght@100;300;500&display=swap");
+
+.navbar {
+  height: 92px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.sideLinks {
+  font-size: 14px;
+  font-family: "Roboto";
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+a {
+  text-decoration: none;
+  color: #f14d54;
+  margin-right: 10px;
+}
+.cartDiv {
+  border: 1px solid rgb(65, 65, 65);
+  border-radius: 3px;
+  display: flex;
+  flex-direction: row;
+  padding: 7px;
+}

@@ -1,27 +1,28 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { globalStyles } from "../constants";
+import logo from "../assets/tatvasoft_logo.png";
+import "../styles/navbar.css";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { Typography } from "@mui/material";
 
 const Navbar = () => {
   return (
-    <div style={{ ...globalStyles.navbar }}>
-      <img
-        src={`${process.env.REACT_APP_HOSTED_URL}logo192.png`}
-        alt="App logo"
-        height={30}
-      />
-      <Link to="/" style={{ marginLeft: 5 }}>
-        Home
-      </Link>
-      <Link to="/apple" style={{ marginLeft: 10 }}>
-        Apple
-      </Link>
-      <Link to="/applet" style={{ marginLeft: 10 }}>
-        Applet
-      </Link>
-      <Link to="/login" style={{ marginLeft: 10 }}>
-        Login
-      </Link>
+    <div className="navbar">
+      <div className="img">
+        <img src={logo} alt="App logo" height={65} />
+      </div>
+      <div className="sideLinks">
+        <Link to="/login" style={{ marginLeft: 10 }}>
+          Login
+        </Link>
+        <Link to="/register" style={{ marginLeft: 10 }}>
+          Register
+        </Link>
+        <div className="cartDiv">
+          <ShoppingCartIcon style={{ color: "#f14d54" }} />
+          <Typography>0 cart</Typography>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,8 +1,28 @@
 import { Button, Container, Stack, Typography } from "@mui/material";
+import { Formik } from "formik";
 import React from "react";
 import { Link } from "react-router-dom";
+import * as Yup from "yup";
+import ValidationErrorMessage from "./ValidationErrorMessage";
 
 const Login = () => {
+  const initialValues = {
+    email: "",
+    password: "",
+  };
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .email("Invalid email address format")
+      .required("Email is required"),
+    password: Yup.string()
+      .min(5, "Password must be 5 characters at minimum")
+      .required("Password is required"),
+  });
+
+  const onSubmit = (data) => {
+    console.log("submitted", data);
+  };
   return (
     <Container>
       <Stack
@@ -77,14 +97,15 @@ const Login = () => {
               </li>
             </ul>
           </Stack>
-
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ width: "220px", height: "45px" }}
-          >
-            Create an Account
-          </Button>
+          <Link to="/register">
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ width: "220px", height: "45px" }}
+            >
+              Create an Account
+            </Button>
+          </Link>
         </Stack>
 
         <Stack
@@ -92,54 +113,88 @@ const Login = () => {
           width={"45%"}
           justifyContent={"space-between"}
         >
-          <Stack>
-            <Typography variant="body2" fontSize={20}>
-              Registered Customers
-              <hr />
-            </Typography>
-
-            <Typography variant="h4" fontSize={14} marginTop={2}>
-              If you have an account with us, please log in.
-            </Typography>
-
-            <Typography variant="body1" marginTop={2} marginBottom={1}>
-              Email Address *
-            </Typography>
-
-            <input
-              type="email"
-              style={{
-                width: 400,
-                height: 35,
-                border: "1px solid #E4E4E4",
-                fontSize: 18,
-                padding: "0 15px",
-              }}
-            />
-
-            <Typography variant="body1" marginTop={2} marginBottom={1}>
-              Password *
-            </Typography>
-
-            <input
-              type="password"
-              style={{
-                width: 400,
-                height: 35,
-                border: "1px solid #E4E4E4",
-                fontSize: 18,
-                padding: "0 15px",
-              }}
-            />
-          </Stack>
-
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ width: "220px", height: "45px", marginTop: "20px" }}
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={onSubmit}
           >
-            Login
-          </Button>
+            {({
+              values,
+              errors,
+              touched,
+              handleBlur,
+              handleChange,
+              handleSubmit,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <Stack>
+                  <Typography variant="body2" fontSize={20}>
+                    Registered Customers
+                    <hr />
+                  </Typography>
+
+                  <Typography variant="h4" fontSize={14} marginTop={2}>
+                    If you have an account with us, please log in.
+                  </Typography>
+
+                  <Typography variant="body1" marginTop={2} marginBottom={1}>
+                    Email Address *
+                  </Typography>
+
+                  <input
+                    type="email"
+                    name="email"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    autoComplete="off"
+                    style={{
+                      width: 400,
+                      height: 35,
+                      border: "1px solid #E4E4E4",
+                      fontSize: 18,
+                      padding: "0 15px",
+                    }}
+                  />
+                  <ValidationErrorMessage
+                    message={errors.email}
+                    touched={touched.email}
+                  />
+
+                  <Typography variant="body1" marginTop={2} marginBottom={1}>
+                    Password *
+                  </Typography>
+
+                  <input
+                    type="password"
+                    name="password"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    autoComplete="off"
+                    style={{
+                      width: 400,
+                      height: 35,
+                      border: "1px solid #E4E4E4",
+                      fontSize: 18,
+                      padding: "0 15px",
+                    }}
+                  />
+                  <ValidationErrorMessage
+                    message={errors.password}
+                    touched={touched.password}
+                  />
+                </Stack>
+
+                <Button
+                  variant="contained"
+                  type="submit"
+                  color="primary"
+                  style={{ width: "220px", height: "45px", marginTop: "20px" }}
+                >
+                  Login
+                </Button>
+              </form>
+            )}
+          </Formik>
         </Stack>
       </Stack>
     </Container>

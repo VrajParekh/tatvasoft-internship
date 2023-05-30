@@ -4,14 +4,46 @@ import {
   MenuItem,
   Select,
   Stack,
-  TextField,
   Typography,
 } from "@mui/material";
 import React from "react";
-import "../styles/register.css";
 import { Link } from "react-router-dom";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import ValidationErrorMessage from "./ValidationErrorMessage";
 
 const Register = () => {
+  const initialValues = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    roleId: 0,
+    password: "",
+    confirmPassword: "",
+  };
+
+  const validationSchema = Yup.object().shape({
+    firstName: Yup.string().required("First name is required"),
+    lastName: Yup.string().required("Last name is required"),
+    roleId: Yup.number().required("Role is required"),
+    email: Yup.string()
+      .email("Invalid email address format")
+      .required("Email is required"),
+    password: Yup.string()
+      .min(5, "Password must be 5 characters at minimum")
+      .required("Password is required"),
+    confirmPassword: Yup.string()
+      .oneOf(
+        [Yup.ref("password"), null],
+        "Password and Confirm Password must be match."
+      )
+      .required("Confirm Password is required."),
+  });
+
+  const onSubmit = (data) => {
+    console.log("submitted", data);
+  };
+
   return (
     <Container>
       <Stack
@@ -56,189 +88,186 @@ const Register = () => {
       <Typography variant="h5" fontSize={14}>
         Please enter the following information to create your account
       </Typography>
-
-      <Stack
-        direction={"row"}
-        flexWrap={"wrap"}
-        justifyContent={"space-between"}
-        marginBottom={5}
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={onSubmit}
       >
-        <Stack width={"45%"}>
-          <Typography variant="body1" marginTop={2} marginBottom={1}>
-            First Name *
-          </Typography>
+        {({
+          values,
+          errors,
+          touched,
+          handleBlur,
+          handleChange,
+          handleSubmit,
+        }) => (
+          <form onSubmit={handleSubmit}>
+            <Stack
+              direction={"row"}
+              flexWrap={"wrap"}
+              justifyContent={"space-between"}
+              marginBottom={5}
+            >
+              <Stack width={"45%"}>
+                <Typography variant="body1" marginTop={2} marginBottom={1}>
+                  First Name *
+                </Typography>
 
-          <input
-            type="text"
-            style={{
-              height: 35,
-              border: "1px solid #E4E4E4",
-              fontSize: 18,
-              padding: "0 15px",
-            }}
-          />
-        </Stack>
-        <Stack width={"45%"}>
-          <Typography variant="body1" marginTop={2} marginBottom={1}>
-            Last Name *
-          </Typography>
+                <input
+                  type="text"
+                  name="firstName"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  style={{
+                    height: 35,
+                    border: "1px solid #E4E4E4",
+                    fontSize: 18,
+                    padding: "0 15px",
+                  }}
+                />
+                <ValidationErrorMessage
+                  message={errors.firstName}
+                  touched={touched.firstName}
+                />
+              </Stack>
+              <Stack width={"45%"}>
+                <Typography variant="body1" marginTop={2} marginBottom={1}>
+                  Last Name *
+                </Typography>
 
-          <input
-            type="text"
-            style={{
-              height: 35,
-              border: "1px solid #E4E4E4",
-              fontSize: 18,
-              padding: "0 15px",
-            }}
-          />
-        </Stack>
-        <Stack width={"45%"}>
-          <Typography variant="body1" marginTop={2} marginBottom={1}>
-            Email Address *
-          </Typography>
+                <input
+                  type="text"
+                  name="lastName"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  style={{
+                    height: 35,
+                    border: "1px solid #E4E4E4",
+                    fontSize: 18,
+                    padding: "0 15px",
+                  }}
+                />
+                <ValidationErrorMessage
+                  message={errors.lastName}
+                  touched={touched.lastName}
+                />
+              </Stack>
+              <Stack width={"45%"}>
+                <Typography variant="body1" marginTop={2} marginBottom={1}>
+                  Email Address *
+                </Typography>
 
-          <input
-            type="email"
-            style={{
-              height: 35,
-              border: "1px solid #E4E4E4",
-              fontSize: 18,
-              padding: "0 15px",
-            }}
-          />
-        </Stack>
-        <Stack width={"45%"}>
-          <Typography variant="body1" marginTop={2} marginBottom={1}>
-            Roles
-          </Typography>
+                <input
+                  type="email"
+                  name="email"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  style={{
+                    height: 35,
+                    border: "1px solid #E4E4E4",
+                    fontSize: 18,
+                    padding: "0 15px",
+                  }}
+                />
+                <ValidationErrorMessage
+                  message={errors.email}
+                  touched={touched.email}
+                />
+              </Stack>
+              <Stack width={"45%"}>
+                <Typography variant="body1" marginTop={2} marginBottom={1}>
+                  Roles
+                </Typography>
 
-          <Select
-            style={{
-              height: "36px",
-            }}
-          >
-            <MenuItem value="seller">Seller</MenuItem>
-            <MenuItem value="buyer">Buyer</MenuItem>
-          </Select>
-        </Stack>
-      </Stack>
+                <Select
+                  name="roleId"
+                  value={values.roleId}
+                  onChange={handleChange}
+                  style={{
+                    height: "36px",
+                  }}
+                >
+                  <MenuItem value={0}>Seller</MenuItem>
+                  <MenuItem value={1}>Buyer</MenuItem>
+                </Select>
+              </Stack>
+            </Stack>
 
-      <Typography variant="body2" fontSize={20}>
-        Login Information
-        <hr />
-      </Typography>
+            <Typography variant="body2" fontSize={20}>
+              Login Information
+              <hr />
+            </Typography>
 
-      <Stack
-        direction={"row"}
-        flexWrap={"wrap"}
-        justifyContent={"space-between"}
-        marginBottom={5}
-      >
-        <Stack width={"45%"}>
-          <Typography variant="body1" marginTop={2} marginBottom={1}>
-            Password *
-          </Typography>
+            <Stack
+              direction={"row"}
+              flexWrap={"wrap"}
+              justifyContent={"space-between"}
+              marginBottom={5}
+            >
+              <Stack width={"45%"}>
+                <Typography variant="body1" marginTop={2} marginBottom={1}>
+                  Password *
+                </Typography>
 
-          <input
-            type="password"
-            style={{
-              height: 35,
-              border: "1px solid #E4E4E4",
-              fontSize: 18,
-              padding: "0 15px",
-            }}
-          />
-        </Stack>
-        <Stack width={"45%"}>
-          <Typography variant="body1" marginTop={2} marginBottom={1}>
-            Confirm Password *
-          </Typography>
+                <input
+                  type="password"
+                  name="password"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  style={{
+                    height: 35,
+                    border: "1px solid #E4E4E4",
+                    fontSize: 18,
+                    padding: "0 15px",
+                  }}
+                />
+                <ValidationErrorMessage
+                  message={errors.password}
+                  touched={touched.password}
+                />
+              </Stack>
+              <Stack width={"45%"}>
+                <Typography variant="body1" marginTop={2} marginBottom={1}>
+                  Confirm Password *
+                </Typography>
 
-          <input
-            type="password"
-            style={{
-              height: 35,
-              border: "1px solid #E4E4E4",
-              fontSize: 18,
-              padding: "0 15px",
-            }}
-          />
-        </Stack>
-      </Stack>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  style={{
+                    height: 35,
+                    border: "1px solid #E4E4E4",
+                    fontSize: 18,
+                    padding: "0 15px",
+                  }}
+                />
+                <ValidationErrorMessage
+                  message={errors.confirmPassword}
+                  touched={touched.confirmPassword}
+                />
+              </Stack>
+            </Stack>
 
-      <Button
-        variant="contained"
-        color="primary"
-        style={{
-          width: "180px",
-          height: "45px",
-          marginTop: "20px",
-          marginBottom: "20px",
-        }}
-      >
-        Register
-      </Button>
+            <Button
+              variant="contained"
+              type="submit"
+              color="primary"
+              style={{
+                width: "180px",
+                height: "45px",
+                marginTop: "20px",
+                marginBottom: "20px",
+              }}
+            >
+              Register
+            </Button>
+          </form>
+        )}
+      </Formik>
     </Container>
   );
-  // <Container className="container">
-  //   <div className="heading">
-  //     <h1>Login or Create an Account</h1>
-  //   </div>
-  //   <div className="info">
-  //     <h4>Personal Information</h4>
-  //     <hr />
-  //     <h5>Please enter the following information to create your account</h5>
-  //   </div>
-  //   <div className="personalInfo">
-  //     <div className="div1">
-  //       <TextField
-  //         id="outlined-basic"
-  //         label="First name"
-  //         variant="outlined"
-  //         style={{ width: "40%", height: "50px" }}
-  //       />
-  //       <TextField
-  //         id="outlined-basic"
-  //         label="Last name"
-  //         variant="outlined"
-  //         style={{ width: "40%", height: "50px" }}
-  //       />
-  //     </div>
-  //     <TextField
-  //       id="outlined-basic"
-  //       label="Email address"
-  //       variant="outlined"
-  //       style={{ width: "100%", height: "50px" }}
-  //     />
-  //   </div>
-  //   <div className="info">
-  //     <h4>Login Information</h4>
-  //     <hr />
-  //   </div>
-  //   <div className="personalInfo">
-  //     <div className="div1">
-  //       <TextField
-  //         id="outlined-basic"
-  //         label="Password"
-  //         variant="outlined"
-  //         style={{ width: "40%", height: "50px" }}
-  //       />
-  //       <TextField
-  //         id="outlined-basic"
-  //         label="Confirm Password"
-  //         variant="outlined"
-  //         style={{ width: "40%", height: "50px" }}
-  //       />
-  //     </div>
-  //   </div>
-  //   <Button
-  //     variant="contained"
-  //     style={{ backgroundColor: "#f14d54", width: 136, height: 45 }}
-  //   >
-  //     Register
-  //   </Button>
-  // </Container>
 };
 
 export default Register;

@@ -7,6 +7,9 @@ import Register from "./components/Register";
 import Footer from "./components/Footer";
 import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Home from "./components/Home";
 
 const theme = createTheme({
   palette: {
@@ -25,11 +28,13 @@ function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
+        <ToastContainer />
         <Router>
           <Navbar />
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/home" element={<Home />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />

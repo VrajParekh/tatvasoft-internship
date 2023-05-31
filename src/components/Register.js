@@ -11,6 +11,9 @@ import { Link } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import ValidationErrorMessage from "./ValidationErrorMessage";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const initialValues = {
@@ -40,8 +43,44 @@ const Register = () => {
       .required("Confirm Password is required."),
   });
 
-  const onSubmit = (data) => {
-    console.log("submitted", data);
+  const navigate = useNavigate();
+
+  const onSubmit = async (data) => {
+    delete data.confirmPassword;
+    try {
+      const response = await axios.post(
+        "https://book-e-sell-node-api.vercel.app/api/user",
+        data
+      );
+      if (response.status === 200) {
+        toast.success("API call is completed successfully", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        navigate("/");
+      }
+      console.log("submitted", response);
+    } catch (error) {
+      console.error("Error submitting data:", error);
+      if (error.response && error.response.status === 409) {
+        toast.error("API call failed: Conflict", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
+    }
   };
 
   return (
@@ -187,8 +226,8 @@ const Register = () => {
                     height: "36px",
                   }}
                 >
-                  <MenuItem value={0}>Seller</MenuItem>
-                  <MenuItem value={1}>Buyer</MenuItem>
+                  <MenuItem value={2}>Seller</MenuItem>
+                  <MenuItem value={3}>Buyer</MenuItem>
                 </Select>
               </Stack>
             </Stack>

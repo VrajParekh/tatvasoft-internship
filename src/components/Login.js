@@ -4,6 +4,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import ValidationErrorMessage from "./ValidationErrorMessage";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const initialValues = {
@@ -20,8 +23,47 @@ const Login = () => {
       .required("Password is required"),
   });
 
-  const onSubmit = (data) => {
-    console.log("submitted", data);
+  const navigate = useNavigate();
+
+  const onSubmit = async (data) => {
+    const responseData = {
+      email: data.email,
+      password: data.password,
+    };
+    try {
+      const response = await axios.post(
+        "https://book-e-sell-node-api.vercel.app/api/user/login",
+        responseData
+      );
+      if (response.status === 200) {
+        toast.success("API call is completed successfully", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        navigate("/home");
+      }
+      console.log("submitted", response);
+    } catch (error) {
+      // console.error("Error submitting data:", error);
+      if (error.response && error.response.status === 401) {
+        toast.error("Credentials are not valid", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
+    }
   };
   return (
     <Container>

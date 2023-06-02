@@ -1,11 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/tatvasoft_logo.png";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Button, Container, Stack, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
 const Navbar = () => {
+  const location = useLocation();
+
+  const isLoginPage = location.pathname === "/";
+  const isHomePage = location.pathname === "/home";
+
   return (
     <Container>
       <Stack
@@ -25,19 +30,44 @@ const Navbar = () => {
           spacing={2}
           padding={[2, 0]}
         >
-          <Link to="/" style={{ textDecoration: "none" }}>
-            <Typography variant="body1" color="primary">
-              Login
-            </Typography>
-          </Link>
-          <Typography variant="body1" color="primary">
-            |
-          </Typography>
-          <Link to="/register" style={{ textDecoration: "none" }}>
-            <Typography variant="body1" color="primary">
-              Register
-            </Typography>
-          </Link>
+          {isLoginPage && (
+            <>
+              <Link to="/" style={{ textDecoration: "none" }}>
+                <Typography variant="body1" color="primary">
+                  Login
+                </Typography>
+              </Link>
+              <Typography variant="body1" color="primary">
+                |
+              </Typography>
+              <Link to="/register" style={{ textDecoration: "none" }}>
+                <Typography variant="body1" color="primary">
+                  Register
+                </Typography>
+              </Link>
+            </>
+          )}
+
+          {isHomePage && (
+            <>
+              <Link to="/update-user" style={{ textDecoration: "none" }}>
+                <Typography variant="body1" color="primary">
+                  Update User
+                </Typography>
+              </Link>
+              <Typography variant="body1" color="primary">
+                |
+              </Typography>
+              <Link to="/cart" style={{ textDecoration: "none" }}>
+                <Typography variant="body1" color="primary">
+                  Cart
+                </Typography>
+              </Link>
+              <Typography variant="body1" color="primary">
+                |
+              </Typography>
+            </>
+          )}
           <Stack
             direction={"row"}
             alignItems={"center"}
@@ -65,6 +95,19 @@ const Navbar = () => {
                 </Typography>
               </Stack>
             </Link>
+
+            {isHomePage && (
+              <>
+                <Link
+                  to="/"
+                  style={{
+                    marginLeft: 10,
+                  }}
+                >
+                  <Button variant="contained">Logout</Button>
+                </Link>
+              </>
+            )}
           </Stack>
         </Stack>
       </Stack>

@@ -55,17 +55,6 @@ const Navbar = () => {
                   Update User
                 </Typography>
               </Link>
-              <Typography variant="body1" color="primary">
-                |
-              </Typography>
-              <Link to="/cart" style={{ textDecoration: "none" }}>
-                <Typography variant="body1" color="primary">
-                  Cart
-                </Typography>
-              </Link>
-              <Typography variant="body1" color="primary">
-                |
-              </Typography>
             </>
           )}
           <Stack

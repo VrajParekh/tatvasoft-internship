@@ -1,14 +1,11 @@
 import {
-
     Typography,
     Pagination,
-
     Card,
     CardMedia,
     CardContent,
     CardActions,
     Button,
-
     ImageList,
     Container,
     Stack,
@@ -120,9 +117,9 @@ export const BookListing = () => {
                 marginTop={"23px"}
             >
                 <Typography sx={{ fontSize: "17px", fontWeight: "bold", color: "#414141" }}>
-                Total - {bookResponse.totalItems} items
-            </Typography>
-             
+                    Total - {bookResponse.totalItems} items
+                </Typography>
+
                 <TextField
                     sx={{
                         width: "34%"
@@ -170,7 +167,7 @@ export const BookListing = () => {
                                 title={book.name}
                             />
                             <CardContent>
-                                <Typography gutterBottom sx={{ fontSize: "24px", fontWeight: "bold" }}>
+                                <Typography gutterBottom sx={{ fontSize: "20px", fontWeight: "bold" }}>
                                     {book.name}
                                 </Typography>
                                 <Typography gutterBottom sx={{ fontSize: "18px" }}>

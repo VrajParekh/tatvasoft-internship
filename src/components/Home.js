@@ -1,11 +1,11 @@
 import React from "react";
-import Booklist from "./BookListing/Booklist";
+import { BookListing } from "./BookListing/BookListing";
 
 const Home = () => {
   return <>
   
   <container>
-    <Booklist/>
+    <BookListing/>
   </container>
   
   </>;

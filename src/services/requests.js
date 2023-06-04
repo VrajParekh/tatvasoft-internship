@@ -74,13 +74,13 @@ request.interceptors.response.use(
   }
 );
 
-function showLoader() {
-  document.body.classList.add("loader-open");
-}
+// function showLoader() {
+//   document.body.classList.add("loader-open");
+// }
 
-function hideLoader() {
-  document.body.classList.remove("loader-open");
-}
+// function hideLoader() {
+//   document.body.classList.remove("loader-open");
+// }
 
 // remove completed request
 function removeRequest(req) {

@@ -1,7 +1,14 @@
 import React from "react";
+import { BookListing } from "./BookListing/BookListing";
 
 const Home = () => {
-  return <div>Home</div>;
+  return <>
+  
+  <container>
+    <BookListing/>
+  </container>
+  
+  </>;
 };
 
 export default Home;

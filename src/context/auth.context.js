@@ -18,7 +18,7 @@ const initialState = {
     signOut: () => {},
 };
 
-const authContext = createContext(initialState);
+export const AuthContext = createContext(initialState);
 
 export const AuthWrapper = ({children}) => {
     const [user, _setUser] = useState(initialUserValue);
@@ -86,9 +86,9 @@ export const AuthWrapper = ({children}) => {
             signOut
     }
 
-    return <authContext.Provider value={value}>{children}</authContext.Provider>;
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuthContext = () => {
-    return useContext(authContext);
+    return useContext(AuthContext);
 }

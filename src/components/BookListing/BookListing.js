@@ -15,7 +15,7 @@ import {
     MenuItem,
     InputLabel
 } from "@mui/material"
-import { useAuthContext } from "../../context/auth.context"
+// import { useAuthContext } from "../../context/auth.context"
 import { useEffect, useState, useMemo } from "react";
 import { defaultFilter } from "../../constants/constant";
 import categoryService from "../../services/category.service";
@@ -23,7 +23,7 @@ import bookService from "../../services/book.service";
 // import bookListingStyles from "./BookListing.module.css"
 
 export const BookListing = () => {
-    const authContext = useAuthContext();
+    // const authContext = useAuthContext();
     // const materialClasses = materialCommonStyles();
     const [bookResponse, setBookResponse] = useState({
         pageIndex: 0,

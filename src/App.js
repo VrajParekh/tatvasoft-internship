@@ -10,7 +10,7 @@ import { createTheme } from "@mui/material";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Home from "./components/Home";
-import CartList from "./components/CartList";
+import { Cart } from "./components/Cart";
 
 const theme = createTheme({
   palette: {
@@ -37,7 +37,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/home" element={<Home />} />
             <Route path="*" element={<NotFound />} />
-            <Route path="/cartList" element={<CartList />} />
+            <Route path="/cart" element={<Cart />} />
           </Routes>
           <Footer />
         </Router>

@@ -4,8 +4,11 @@ import logo from "../assets/tatvasoft_logo.png";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { Button, Container, Stack, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { useCartContext } from "../context/cart.context";
 
 const Navbar = () => {
+  const cartContext = useCartContext();
+
   return (
     <Container>
       <Stack
@@ -59,7 +62,7 @@ const Navbar = () => {
                 justifyContent={"flex-end"}
                 spacing={1}
               >
-                <ShoppingCartIcon color="primary" />0
+                <ShoppingCartIcon color="primary" />{cartContext.cartData.length}
                 <Typography variant="body1" color={"black"}>
                   Cart
                 </Typography>

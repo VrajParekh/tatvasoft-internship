@@ -1,312 +1,327 @@
-import {
-  Button,
-  Container,
-  MenuItem,
-  Select,
-  Stack,
-  Typography,
-} from "@mui/material";
-import React from "react";
+import {Button, TextField} from "@mui/material"
+import { MenuItem } from '@mui/material';
+import { Select, Breadcrumbs, Typography } from '@mui/material';
+import { Formik } from "formik"
+import * as Yup from "yup"
+import axios from "axios"
+import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom"
+import  authService from "../services/auth.service"
 import { Link } from "react-router-dom";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import ValidationErrorMessage from "./ValidationErrorMessage";
-import axios from "axios";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
-const Register = () => {
-  const initialValues = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    roleId: 0,
-    password: "",
-    confirmPassword: "",
-  };
-
-  const validationSchema = Yup.object().shape({
-    firstName: Yup.string().required("First name is required"),
-    lastName: Yup.string().required("Last name is required"),
-    roleId: Yup.number().required("Role is required"),
-    email: Yup.string()
-      .email("Invalid email address format")
-      .required("Email is required"),
-    password: Yup.string()
-      .min(5, "Password must be 5 characters at minimum")
-      .required("Password is required"),
-    confirmPassword: Yup.string()
-      .oneOf(
-        [Yup.ref("password"), null],
-        "Password and Confirm Password must be match."
-      )
-      .required("Confirm Password is required."),
-  });
-
-  const navigate = useNavigate();
-
-  const onSubmit = async (data) => {
-    delete data.confirmPassword;
-    try {
-      const response = await axios.post(
-        "https://book-e-sell-node-api.vercel.app/api/user",
-        data
-      );
-      if (response.status === 200) {
-        toast.success("API call is completed successfully", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-        navigate("/");
-      }
-      console.log("submitted", response);
-    } catch (error) {
-      console.error("Error submitting data:", error);
-      if (error.response && error.response.status === 409) {
-        toast.error("API call failed: Conflict", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-      }
+export const Register = () => {
+    const navigate = useNavigate();
+    const initialValues = {
+        firstname: "",       
+        lastname: "",
+        email: "",
+        role: "",
+        password: "",
+        confirmpassword: ""
     }
-  };
+    const validationSchema = Yup.object().shape({
+        firstname: Yup.string().min(3, "Firstname should atleast contain 3 characters").required("Please fill First name"),
+        lastname: Yup.string().min(3, "Lastname should atleast contain 3 characters").required("Please fill Last name"),
+        email: Yup.string().email("Please enter a valid email").required("Please fill Email address"),
+        password: Yup.string().min(5,"Password must contain 5 character").required("Please enter Password"),
+        confirmpassword: Yup.string().oneOf([Yup.ref('password'), null],"Password must be same").required("Please confirm the Password")
+    })
 
-  return (
-    <Container>
-      <Stack
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent={"center"}
-        spacing={2}
-        margin={4}
-      >
-        <Link
-          to="/"
-          style={{
-            textDecoration: "none",
-            color: "black",
-          }}
-        >
-          <Typography variant="subtitle1">Home</Typography>
-        </Link>
-        <Typography variant="caption"> &gt; </Typography>
+    const onFormSubmit = async (values) => {
 
-        <Typography variant="subtitle1" color="primary">
-          Create an Account
-        </Typography>
-      </Stack>
+        // console.log(values);
+        var roleId = 0
+        if(values.role === "Buyer")
+        {
+            roleId = 3
+        }
+        else{
+            roleId = 2
+        }
+        const requestData = {
+            firstName: values.firstname,
+            lastName: values.lastname,
+            email: values.email,
+            roleId: roleId  ,
+            password: values.password,
+        }
+        //Tatvasoft API
+        await authService.create(requestData).then((res) => {
+            navigate("/login");
+            toast.success("Successfully Registered");
+        });
 
-      <Stack
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent={"center"}
-        margin={4}
-      >
-        <Typography variant="h3" fontSize={40}>
-          Create an Account
-        </Typography>
-      </Stack>
-
-      <Typography variant="body2" fontSize={20}>
-        Personal Information
-        <hr />
-      </Typography>
-
-      <Typography variant="h5" fontSize={14}>
-        Please enter the following information to create your account
-      </Typography>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={onSubmit}
-      >
-        {({
-          values,
-          errors,
-          touched,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-        }) => (
-          <form onSubmit={handleSubmit}>
-            <Stack
-              direction={"row"}
-              flexWrap={"wrap"}
-              justifyContent={"space-between"}
-              marginBottom={5}
+        //Localhost:8000/api
+        // authService.create(values).then((res) => {
+        //     navigate("/login");
+        //     toast.success('Successfully Registered', {
+        //         position: "top-right",
+        //         autoClose: 3000,
+        //         hideProgressBar: false,
+        //         closeOnClick: true,
+        //         pauseOnHover: true,
+        //         draggable: true,
+        //         progress: undefined,
+        //         theme: "colored",
+        //     });
+        // });
+    }
+    return(
+        <div>
+            <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={onFormSubmit}
             >
-              <Stack width={"45%"}>
-                <Typography variant="body1" marginTop={2} marginBottom={1}>
-                  First Name *
-                </Typography>
+            {({values, errors, touched, handleChange, handleBlur, handleSubmit}) => (
+                <form onSubmit={handleSubmit}>
+                    <div style={{
+                        display:"flex",
+                        flexDirection:"column",
+                        justifyContent:"center",
+                        alignItems:"center",
+                        rowGap:10,
+                    }}>
+                    <Breadcrumbs separator="›" aria-label="breadcrumb">
+                        <Link underline="none" color="black" to="/" className="homeLink">
+                            Home
+                        </Link>
+                        <Typography color="#f15d54">Create An Account</Typography>
+                    </Breadcrumbs>
+                        <Typography variant="h4" sx={{ fontWeight:"bold",color:"#414141"}}>Login or Create an Account</Typography>
+                        <div style={{
+                            width:140,
+                            height:0,
+                            border:1,
+                            borderStyle: "solid",
+                            borderColor:"rgb(255,89,92)",
+                            marginBottom:30
+                        }}> </div>
+                        <div style={{
+                            marginLeft:155    ,
+                            marginRight:"auto",
+                            fontSize:20,
+                            fontWeight:"bold",
+                            color:"rgb(94,94,94)"
+                        }}>Personal Information
+                            <div><span style={{
+                                fontSize:14,
+                                color:"rgb(94,94,94)",
+                                fontWeight:"lighter",
+                                marginTop:50
+                            }}>Please enter the following Information to create account</span></div>
+                        </div>
+                        <div style={{
+                            display:"flex",
+                            columnGap:40,
+                        }}>
+                            <div style={{
+                                display:"flex",
+                                flexDirection:"column",
+                                rowGap:5
+                            }}>
+                                First Name*
+                                <TextField 
+                                // id="outlined-basic" 
+                                name="firstname"
+                                // label="First Name" 
+                                variant="outlined" 
+                                value={values.firstname}
+                                onChange={handleChange}
+                                onBlur={handleBlur} 
+                                size="small"
+                                style={{
+                                    width:500,
+                                }}
+                                />
+                                <span style={{
+                                    color:"red",
+                                    fontSize:13
 
-                <input
-                  type="text"
-                  name="firstName"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  style={{
-                    height: 35,
-                    border: "1px solid #E4E4E4",
-                    fontSize: 18,
-                    padding: "0 15px",
-                  }}
-                />
-                <ValidationErrorMessage
-                  message={errors.firstName}
-                  touched={touched.firstName}
-                />
-              </Stack>
-              <Stack width={"45%"}>
-                <Typography variant="body1" marginTop={2} marginBottom={1}>
-                  Last Name *
-                </Typography>
+                                }}
+                                >
+                                    {touched.firstname && errors.firstname}
+                                </span>
+                            </div>
+                            
+                            <div style={{
+                                display:"flex",
+                                flexDirection:"column",
+                                rowGap:5
+                            }}>
+                                Last Name*
+                                <TextField 
+                                // id="outlined-basic" 
+                                name="lastname"
 
-                <input
-                  type="text"
-                  name="lastName"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  style={{
-                    height: 35,
-                    border: "1px solid #E4E4E4",
-                    fontSize: 18,
-                    padding: "0 15px",
-                  }}
-                />
-                <ValidationErrorMessage
-                  message={errors.lastName}
-                  touched={touched.lastName}
-                />
-              </Stack>
-              <Stack width={"45%"}>
-                <Typography variant="body1" marginTop={2} marginBottom={1}>
-                  Email Address *
-                </Typography>
+                                // label="Last Name" 
+                                variant="outlined" 
+                                value={values.lastname}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                size="small"
+                                style={{
+                                    width:500,
+                                }}
+                                />
+                                <span style={{
+                                    color:"red",
+                                    fontSize:13
 
-                <input
-                  type="email"
-                  name="email"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  style={{
-                    height: 35,
-                    border: "1px solid #E4E4E4",
-                    fontSize: 18,
-                    padding: "0 15px",
-                  }}
-                />
-                <ValidationErrorMessage
-                  message={errors.email}
-                  touched={touched.email}
-                />
-              </Stack>
-              <Stack width={"45%"}>
-                <Typography variant="body1" marginTop={2} marginBottom={1}>
-                  Roles
-                </Typography>
+                                }}
+                                >
+                                    {touched.lastname && errors.lastname}
+                                </span>
+                            </div>
+                        </div>
+                    <div style={{
+                            display:"flex",
+                            columnGap:40
+                        }}>
+                            <div style={{
+                                display:"flex",
+                                flexDirection:"column",
+                                rowGap:5
+                            }}>
+                                Email*
+                                <TextField 
+                                // id="outlined-basic" 
+                                name="email"
+                                // label="Email" 
+                                variant="outlined"
+                                value={values.email} 
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                size="small"
+                                style={{
+                                    width:500,
+                                }}
+                                />
+                                <span style={{
+                                    color:"red",
+                                    fontSize:13
 
-                <Select
-                  name="roleId"
-                  value={values.roleId}
-                  onChange={handleChange}
-                  style={{
-                    height: "36px",
-                  }}
-                >
-                  <MenuItem value={2}>Seller</MenuItem>
-                  <MenuItem value={3}>Buyer</MenuItem>
-                </Select>
-              </Stack>
-            </Stack>
+                                }}
+                                >
+                                    {touched.email && errors.email}
+                                </span>
+                            </div>
+                            
+                            <div style={{
+                                display:"flex",
+                                flexDirection:"column",
+                                rowGap:5
+                            }}>
+                                Role*
+                                <Select
+                                    // labelId="demo-simple-select-label"
+                                    // id="demo-simple-select"
+                                    name="role"
+                                    value={values.role}
+                                    // label="Role"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    size="small"
+                                    style={{
+                                        width:500,
+                                    }}  
+                                    >
+                                    <MenuItem value={"Seller"}>Seller</MenuItem> 
+                                    <MenuItem value={"Buyer"}>Buyer</MenuItem>
+                                </Select>
+                            </div>
+                        </div>
+                        <div style={{
+                            marginLeft:162  ,
+                            marginRight:"auto",
+                            fontSize:20,
+                            fontWeight:"bold",
+                            color:"rgb(94,94,94)"
+                        }}>Login Information</div>
+                        <div style={{
+                            display:"flex",
+                            columnGap:40
+                        }}>
+                            <div style={{
+                                display:"flex",
+                                flexDirection:"column",
+                                rowGap:5
+                            }}>
+                                Password*
+                                <TextField 
+                                type="password"
+                                // id="outlined-basic" 
+                                name="password"
+                                // label="Password" 
+                                variant="outlined" 
+                                value={values.password}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                size="small"
+                                style={{
+                                    width:500,
+                                }}
+                                />
+                                <span style={{
+                                    color:"red",
+                                    fontSize:13
 
-            <Typography variant="body2" fontSize={20}>
-              Login Information
-              <hr />
-            </Typography>
-
-            <Stack
-              direction={"row"}
-              flexWrap={"wrap"}
-              justifyContent={"space-between"}
-              marginBottom={5}
-            >
-              <Stack width={"45%"}>
-                <Typography variant="body1" marginTop={2} marginBottom={1}>
-                  Password *
-                </Typography>
-
-                <input
-                  type="password"
-                  name="password"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  style={{
-                    height: 35,
-                    border: "1px solid #E4E4E4",
-                    fontSize: 18,
-                    padding: "0 15px",
-                  }}
-                />
-                <ValidationErrorMessage
-                  message={errors.password}
-                  touched={touched.password}
-                />
-              </Stack>
-              <Stack width={"45%"}>
-                <Typography variant="body1" marginTop={2} marginBottom={1}>
-                  Confirm Password *
-                </Typography>
-
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  style={{
-                    height: 35,
-                    border: "1px solid #E4E4E4",
-                    fontSize: 18,
-                    padding: "0 15px",
-                  }}
-                />
-                <ValidationErrorMessage
-                  message={errors.confirmPassword}
-                  touched={touched.confirmPassword}
-                />
-              </Stack>
-            </Stack>
-
-            <Button
-              variant="contained"
-              type="submit"
-              color="primary"
-              style={{
-                width: "180px",
-                height: "45px",
-                marginTop: "20px",
-                marginBottom: "20px",
-              }}
-            >
-              Register
-            </Button>
-          </form>
-        )}
-      </Formik>
-    </Container>
-  );
-};
-
-export default Register;
+                                }}
+                                >
+                                    {touched.password && errors.password}
+                                </span>
+                            </div>
+                            
+                            <div style={{
+                                display:"flex",
+                                flexDirection:"column",
+                                rowGap:5
+                            }}>
+                                Confirm Password*
+                                <TextField
+                                type="password" 
+                                // id="outlined-basic" 
+                                name="confirmpassword"
+                                // label="Confirm Password" 
+                                variant="outlined" 
+                                value={values.confirmpassword}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                size="small"
+                                style={{
+                                    width:500,
+                                }}
+                                />
+                                <span style={{
+                                    color:"red",
+                                    fontSize:13,
+                                }}
+                                >
+                                    {touched.confirmpassword && errors.confirmpassword}
+                                </span>
+                            </div>
+                        </div>    
+                        <Button variant="contained" type="submit" 
+                        style={{
+                            marginRight:"auto",
+                            marginLeft:155,
+                            backgroundColor:"rgb(255,89,92)",
+                            borderRadius:3,
+                            fontWeight:"bold",
+                            textTransform:"capitalize"
+                        }}
+                        >Register</Button>      
+                    </div>
+                </form>    
+            )} 
+            </Formik>
+            {/* {user.map((item) => (
+                <div key={item.id}>
+                    <h3>{item.title}</h3>
+                    <span>{item.body}</span>
+                </div>
+            ))} */}
+        </div>  
+                  
+    )
+}

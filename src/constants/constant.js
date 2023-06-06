@@ -3,3 +3,5 @@ export const defaultFilter = {
     pageSize: 10,
     keyword: "",
 };
+
+export const RecordsPerPage = [2, 5, 10, 100];

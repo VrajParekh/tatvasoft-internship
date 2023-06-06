@@ -1,4 +1,21 @@
 import { Role, RoutePaths } from "./enum";
+import cartService from "../services/cart.service";
+const AddToCart = async (book, id) => {
+    return cartService
+        .add({
+            userId: id,
+            bookId: book.id,
+            quantity: 1,
+        })
+        .then((res) => {
+            return { error: false, message: "Item added in cart" };
+        })
+        .catch((e) => {
+            if (e.status === 500)
+            return { error: true, message: "Item already in the cart" };
+            else return { error: true, message: "something went wrong" };
+        });
+};
 
 const LocalStorageKeys = {
     USER:"user",
@@ -29,7 +46,7 @@ const NavigationItems = [
         name: "Book Listing",
         route: RoutePaths.BookListing,
         access: [Role.Admin, Role.Buyer, Role.Seller]
-    },
+    },  
 ];
 
 const hasAccess = (pathname, user) => {
@@ -48,6 +65,7 @@ const hasAccess = (pathname, user) => {
 export { 
     NavigationItems,  
     LocalStorageKeys,
-    hasAccess
+    hasAccess,
+    AddToCart
 }
 
